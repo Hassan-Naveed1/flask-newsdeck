@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>NewsDeck — Public News Aggregator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+  <header>
+    <h1>📰 NewsDeck</h1>
+    <div class="kbd">/api/articles</div>
+    <div class="kbd">/api/favorites</div>
+  </header>
+
+  <main>
+    <p>Simple NewsAPI client with caching and favorites. Use the filters below or REST endpoints directly.</p>
+    <div class="controls">
+      <label>Topic:
+        <select id="topic">
+          <option value="tech">tech</option>
+          <option value="business">business</option>
+          <option value="sports">sports</option>
+        </select>
+      </label>
+      <button id="load">Load</button>
+      <button id="prev">Prev</button>
+      <button id="next">Next</button>
+      <span id="pageinfo"></span>
+    </div>
+    <div id="list"></div>
+  </main>
+
+  <footer>Built with Flask · SQLite · APScheduler</footer>
+
+<script>
+let page = 1, limit = 10;
+const topicSel = document.getElementById('topic');
+const listEl = document.getElementById('list');
+const pageInfo = document.getElementById('pageinfo');
+
+async function load() {
+  const topic = topicSel.value;
+  const res = await fetch(`/api/articles?topic=${topic}&page=${page}&limit=${limit}`);
+  const data = await res.json();
+
+  listEl.innerHTML = '';
+  data.items.forEach(a => {
+    const div = document.createElement('div');
+    div.className = 'article';
+    div.innerHTML = `
+      <div>
+        <h3><a href="${a.url}" target="_blank" rel="noopener">${a.title}</a></h3>
+        <div class="meta">${a.source || ''} • ${a.published_at || ''}</div>
+      </div>
+      <div><button data-id="${a.id}" class="fav">☆ Save</button></div>`;
+    listEl.appendChild(div);
+  });
+
+  pageInfo.textContent = `Page ${data.page} (limit ${data.limit}) — total ${data.total}`;
+
+  document.querySelectorAll('.fav').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.getAttribute('data-id');
+      const resp = await fetch('/api/favorites', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({article_id: Number(id)})
+      });
+      if (resp.ok) btn.textContent = '✓ Saved';
+    });
+  });
+}
+
+document.getElementById('load').onclick = () => { page = 1; load(); };
+document.getElementById('prev').onclick = () => { if (page > 1) { page--; load(); } };
+document.getElementById('next').onclick = () => { page++; load(); };
+
+load();
+</script>
+</body>
+</html>

@@ -1,0 +1,73 @@
+/* General dark theme styling */
+* { box-sizing: border-box; }
+body {
+  font-family: system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  margin: 0;
+  background: #0b1220;
+  color: #e8ebf1;
+}
+
+/* Header */
+header {
+  position: sticky;
+  top: 0;
+  background: #0e1730;
+  border-bottom: 1px solid #1f2b4a;
+  padding: 14px 18px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+h1 { font-size: 18px; margin: 0; }
+
+/* Main content */
+main {
+  max-width: 980px;
+  margin: 24px auto;
+  padding: 0 16px;
+}
+
+/* Controls */
+.controls {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 12px 0;
+}
+
+button, select {
+  background: #172243;
+  border: 1px solid #2a3a6a;
+  color: #e8ebf1;
+  padding: 8px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+button:hover { filter: brightness(1.1); }
+
+/* Article cards */
+.article {
+  background: #0f1833;
+  border: 1px solid #213061;
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 12px 0;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 10px;
+}
+.article h3 { margin: 0 0 8px 0; font-size: 16px; }
+.meta { opacity: .8; font-size: 12px; }
+
+/* Small UI details */
+.kbd {
+  font-family: ui-monospace, Consolas, monospace;
+  background: #121a38;
+  border: 1px solid #293868;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: 6px;
+}
+
+footer { opacity: .7; text-align: center; padding: 30px 0; font-size: 12px; }
+a { color: #8bb6ff; }
